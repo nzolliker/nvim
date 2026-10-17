@@ -4,7 +4,6 @@ return {
 	dependencies = {
 		"rafamadriz/friendly-snippets",
 	},
-	build = "cargo build --release",
 	opts = {
 		-- your existing config
 	},

@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- terminal font has Nerd Font glyphs (kitty bundles them as fallback)
+vim.g.have_nerd_font = true
+
 -- go to explorer/file-overview
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 

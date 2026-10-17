@@ -1,7 +1,8 @@
 return {
 	"echasnovski/mini.diff",
 	opts = {
-		view = { style = "sign" },
+		-- color line numbers, so the sign column stays free for gitsigns and diagnostics
+		view = { style = "number" },
 	},
 	config = function(_, opts)
 		local diff = require("mini.diff")
