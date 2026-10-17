@@ -1,40 +1,51 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
-	branch = "master",
+	branch = "main",
+	lazy = false,
 	build = ":TSUpdate",
 
 	config = function()
-		require("nvim-treesitter.configs").setup({
-			ensure_installed = {
-				"bash",
-				"c",
-				"css",
-				"diff",
-				"dockerfile",
-				"html",
-				"javascript",
-				"lua",
-				"luadoc",
-				"markdown",
-				"markdown_inline",
-				"python",
-				"query",
-				"typescript",
-				"vim",
-				"vimdoc",
-			},
+		require("nvim-treesitter").install({
+			"bash",
+			"c",
+			"css",
+			"diff",
+			"dockerfile",
+			"html",
+			"javascript",
+			"lua",
+			"luadoc",
+			"markdown",
+			"markdown_inline",
+			"python",
+			"query",
+			"typescript",
+			"vim",
+			"vimdoc",
+		})
 
-			auto_install = true,
+		vim.api.nvim_create_autocmd("FileType", {
+			group = vim.api.nvim_create_augroup("treesitter-start", { clear = true }),
+			callback = function(event)
+				local lang = vim.treesitter.language.get_lang(event.match)
+				if not lang then
+					return
+				end
 
-			highlight = {
-				enable = true,
-				additional_vim_regex_highlighting = { "ruby" },
-			},
+				-- auto install parsers for filetypes that aren't in the list above
+				if not vim.treesitter.language.add(lang) then
+					if vim.tbl_contains(require("nvim-treesitter").get_available(), lang) then
+						require("nvim-treesitter").install(lang)
+					end
+					return
+				end
 
-			indent = {
-				enable = true,
-				disable = { "ruby" },
-			},
+				vim.treesitter.start(event.buf, lang)
+
+				if event.match ~= "ruby" then
+					vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				end
+			end,
 		})
 	end,
 }
